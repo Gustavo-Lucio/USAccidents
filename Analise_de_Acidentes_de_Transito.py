@@ -47,14 +47,14 @@ sns.heatmap(corr, annot=True, cmap='coolwarm', fmt='.2f')
 plt.title("Mapa de Correlação entre Variáveis")
 plt.show()
 
-#Análise de Padrões
+#Distribuição de Acidentes por Estado
 plt.figure(figsize=(15, 5))
 sns.countplot(data=df, x='State', order=df['State'].value_counts().index)
 plt.xticks(rotation=90)
 plt.title("Distribuição de Acidentes por Estado")
 plt.show()
 
-#Tipo de Clima
+#Acidentes por Tipo de Clima
 plt.figure(figsize=(10, 5))
 sns.countplot(data=df, x='Weather_Condition', order=df['Weather_Condition'].value_counts().head(10).index)
 plt.xticks(rotation=45)
