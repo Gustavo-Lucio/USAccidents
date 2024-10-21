@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import plotly.express as px
 
 df = pd.read_csv("C:/Volume E/Downloads/Descarte/Analise de dados/US_Accidents_March23.csv", low_memory=False)
 
@@ -73,3 +74,18 @@ sns.lineplot(x=accidents_over_time.index.astype(str), y=accidents_over_time.valu
 plt.xticks(rotation=45)
 plt.title("Evolução dos Acidentes ao Longo do Tempo")
 plt.show()
+
+#### Visualizações Interativas Tarefa 3
+
+# Visualização básica de um histograma com Seaborn (não interativo)
+plt.figure(figsize=(10,6))
+sns.histplot(df['Severity'], bins=30, kde=True)
+plt.title('Distribuição de Severidade dos Acidentes')
+plt.xlabel('Nível de Severidade')
+plt.ylabel('Frequência')
+plt.show()
+
+# Visualização interativa com Plotly (transformando o gráfico em interativo)
+fig = px.histogram(df, x='Severity', nbins=30, title='Distribuição de Severidade dos Acidentes (Interativo)')
+fig.update_layout(xaxis_title='Nível de Severidade', yaxis_title='Frequência')
+fig.show()
