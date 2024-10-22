@@ -89,3 +89,19 @@ plt.show()
 fig = px.histogram(df, x='Severity', nbins=30, title='Distribuição de Severidade dos Acidentes (Interativo)')
 fig.update_layout(xaxis_title='Nível de Severidade', yaxis_title='Frequência')
 fig.show()
+
+#### Análise Temporal Tarefa 4
+
+df['Start_Time'] = df['Start_Time'].str.replace(r'\.000000000', '', regex=True)
+df['End_Time'] = df['End_Time'].str.replace(r'\.000000000', '', regex=True)
+
+df['Start_Time'] = pd.to_datetime(df['Start_Time'], errors='coerce')
+df['End_Time'] = pd.to_datetime(df['End_Time'], errors='coerce')
+
+invalid_times = df[df['Start_Time'].isna()]
+print("Valores inválidos:", invalid_times)
+
+df['Day_of_Week'] = df['Start_Time'].dt.day_name()
+df['Hour'] = df['Start_Time'].dt.hour
+
+accidents_by_time = df.groupby(['Day_of_Week', 'Hour']).size().unstack().fillna(0)
