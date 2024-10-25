@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.express as px
 
-df = pd.read_csv("C:/Volume E/Downloads/Descarte/Analise de dados/US_Accidents_March23.csv", low_memory=False)
+df = pd.read_csv("C:/Volume E/Downloads/Descarte/Analise de dados/US_Accidents_March23Parte1.csv", low_memory=False)
 
 #### Limpeza de dados Tarefa 1
 
@@ -44,7 +44,7 @@ print("Limpeza de dados concluída e arquivo salvo como 'US_Accidents_Cleaned.cs
 corr = df.corr(numeric_only=True)
 
 plt.figure(figsize=(12, 6))
-sns.heatmap(corr, annot=True, cmap='coolwarm', fmt='.2f')
+sns.heatmap(corr, annot=True, cmap='coolwarm', fmt='.2f', linewidths=1, linecolor='white')
 plt.title("Mapa de Correlação entre Variáveis")
 plt.show()
 
@@ -63,16 +63,25 @@ plt.title("Top 10 Condições Climáticas Durante Acidentes")
 plt.show()
 
 #Análise de Acidentes ao Longo do Tempo
-df['Start_Time'] = pd.to_datetime(df['Start_Time'])
+df['Start_Time'] = pd.to_datetime(df['Start_Time'], errors='coerce')
 
-df['YearMonth'] = df['Start_Time'].dt.to_period('M')
+df_cleaned = df.dropna(subset=['Start_Time'])
 
-accidents_over_time = df['YearMonth'].value_counts().sort_index()
+df_cleaned['YearMonth'] = df_cleaned['Start_Time'].dt.to_period('M')
 
-plt.figure(figsize=(12, 5))
+accidents_over_time = df_cleaned['YearMonth'].value_counts().sort_index()
+
+# Plotar a evolução dos acidentes ao longo do tempo
+
 sns.lineplot(x=accidents_over_time.index.astype(str), y=accidents_over_time.values)
-plt.xticks(rotation=45)
+
+plt.xticks(ticks=range(0, len(accidents_over_time), 6), rotation=45, ha='right')
+
 plt.title("Evolução dos Acidentes ao Longo do Tempo")
+plt.xlabel('Ano-Mês')
+plt.ylabel('Número de Acidentes')
+
+plt.tight_layout()
 plt.show()
 
 #### Visualizações Interativas Tarefa 3
@@ -92,6 +101,9 @@ fig.show()
 
 #### Análise Temporal Tarefa 4
 
+df['Start_Time'] = df['Start_Time'].astype(str)
+df['End_Time'] = df['End_Time'].astype(str)
+
 df['Start_Time'] = df['Start_Time'].str.replace(r'\.000000000', '', regex=True)
 df['End_Time'] = df['End_Time'].str.replace(r'\.000000000', '', regex=True)
 
@@ -105,3 +117,14 @@ df['Day_of_Week'] = df['Start_Time'].dt.day_name()
 df['Hour'] = df['Start_Time'].dt.hour
 
 accidents_by_time = df.groupby(['Day_of_Week', 'Hour']).size().unstack().fillna(0)
+
+days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+accidents_by_time = accidents_by_time.reindex(days_order)
+
+plt.figure(figsize=(12, 6))
+sns.heatmap(accidents_by_time, cmap='coolwarm', linewidths=.5)
+plt.title('Acidentes por Hora do Dia e Dia da Semana')
+plt.xlabel('Hora do Dia')
+plt.ylabel('Dia da Semana')
+plt.show()
