@@ -5,6 +5,8 @@ import plotly.express as px
 
 df = pd.read_csv("C:/Volume E/Downloads/Descarte/Analise de dados/US_Accidents_March23Parte1.csv", low_memory=False)
 
+# link do note usado na apresentação https://colab.research.google.com/drive/1nbBtEQ8mPssXChsV8-IZIUCvdfUjhFjQ?usp=sharing#scrollTo=fGkKOUvXqqtG
+
 #### Limpeza de dados Tarefa 1
 
 # Exibir informações iniciais sobre o dataset
